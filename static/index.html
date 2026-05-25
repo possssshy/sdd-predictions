@@ -5,14 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Передбачення — SlashDotDash</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
-
-html, body {
-  height: 100%;
-}
-
+html, body { height: 100%; }
 body {
   font-family: 'DM Sans', sans-serif;
   font-weight: 300;
@@ -26,225 +22,67 @@ body {
   padding: 3rem 1.5rem;
   -webkit-font-smoothing: antialiased;
 }
-
-.wrap {
-  width: 100%;
-  max-width: 420px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-}
-
-.brand {
-  font-size: 0.65rem;
-  font-weight: 500;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: #bbb;
-  margin-bottom: 2.5rem;
-}
-
-.title {
-  font-size: 1.75rem;
-  font-weight: 400;
-  line-height: 1.25;
-  margin-bottom: 0.9rem;
-  color: #111;
-  letter-spacing: -0.01em;
-}
-
-.subtitle {
-  font-size: 0.9rem;
-  color: #999;
-  margin-bottom: 0.3rem;
-  line-height: 1.5;
-}
-
-.book-name {
-  font-size: 0.9rem;
-  color: #dbb3c3;
-  font-weight: 500;
-  margin-bottom: 2.5rem;
-}
-
-.divider {
-  width: 32px;
-  height: 1px;
-  background: #dbb3c3;
-  margin: 0 auto 2.5rem;
-}
-
-.prompt {
-  font-size: 1rem;
-  color: #444;
-  margin-bottom: 2rem;
-  line-height: 1.65;
-}
-
-.fields {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.75rem;
-  width: 100%;
-  margin-bottom: 1rem;
-}
-
-.field-wrap {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-}
-
-.field-wrap label {
-  font-size: 0.65rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: #bbb;
-  text-align: left;
-}
-
+.wrap { width: 100%; max-width: 420px; display: flex; flex-direction: column; align-items: center; text-align: center; }
+.brand { font-size: 0.65rem; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: #bbb; margin-bottom: 2.5rem; }
+.title { font-size: 1.75rem; font-weight: 400; line-height: 1.25; margin-bottom: 0.9rem; color: #111; letter-spacing: -0.01em; }
+.subtitle { font-size: 0.9rem; color: #999; margin-bottom: 0.3rem; line-height: 1.5; }
+.book-name { font-size: 0.9rem; color: #dbb3c3; font-weight: 500; margin-bottom: 2.5rem; }
+.divider { width: 32px; height: 1px; background: #dbb3c3; margin: 0 auto 2.5rem; }
+.prompt { font-size: 1rem; color: #444; margin-bottom: 2rem; line-height: 1.65; }
+.fields { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; width: 100%; margin-bottom: 1rem; }
+.field-wrap { display: flex; flex-direction: column; gap: 0.4rem; }
+.field-wrap label { font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; color: #bbb; text-align: left; }
 input[type=number] {
-  width: 100%;
-  padding: 1rem;
-  border: 1px solid #e8e8e8;
-  border-radius: 8px;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 1.2rem;
-  font-weight: 300;
-  color: #111;
-  background: #fff;
-  outline: none;
-  text-align: center;
-  transition: border-color 0.2s;
-  -moz-appearance: textfield;
-  /* bigger touch target */
-  min-height: 56px;
+  width: 100%; padding: 1rem; border: 1px solid #e8e8e8; border-radius: 8px;
+  font-family: 'DM Sans', sans-serif; font-size: 1.2rem; font-weight: 300; color: #111;
+  background: #fff; outline: none; text-align: center; transition: border-color 0.2s;
+  -moz-appearance: textfield; min-height: 56px;
 }
 input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; }
 input[type=number]:focus { border-color: #dbb3c3; }
-
 .btn-submit {
-  width: 100%;
-  padding: 1.1rem;
-  background: #111;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 0.9rem;
-  font-weight: 500;
-  letter-spacing: 0.04em;
-  cursor: pointer;
-  transition: background 0.2s, transform 0.1s;
-  margin-bottom: 0.65rem;
-  min-height: 54px;
+  width: 100%; padding: 1.1rem; background: #111; color: #fff; border: none; border-radius: 8px;
+  font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 500; letter-spacing: 0.04em;
+  cursor: pointer; transition: background 0.2s, transform 0.1s; margin-bottom: 0.65rem; min-height: 54px;
   -webkit-tap-highlight-color: transparent;
 }
 .btn-submit:hover { background: #222; }
 .btn-submit:active { transform: scale(0.98); }
 .btn-submit:disabled { background: #ccc; cursor: not-allowed; }
-
 .btn-random {
-  width: 100%;
-  padding: 1rem;
-  background: transparent;
-  color: #bbb;
-  border: 1px solid #ebebeb;
-  border-radius: 8px;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 0.85rem;
-  font-weight: 300;
-  letter-spacing: 0.03em;
-  cursor: pointer;
-  transition: all 0.2s;
-  min-height: 50px;
+  width: 100%; padding: 1rem; background: transparent; color: #bbb; border: 1px solid #ebebeb;
+  border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 300;
+  letter-spacing: 0.03em; cursor: pointer; transition: all 0.2s; min-height: 50px;
   -webkit-tap-highlight-color: transparent;
 }
 .btn-random:hover { border-color: #dbb3c3; color: #dbb3c3; }
 .btn-random:active { transform: scale(0.98); }
-
 .result {
-  display: none;
-  width: 100%;
-  margin-top: 2rem;
-  padding-top: 2rem;
-  border-top: 1px solid #f0f0f0;
-  text-align: center;
-  padding-bottom: 2rem;
+  display: none; width: 100%; margin-top: 2rem; padding-top: 2rem; padding-bottom: 2rem;
+  border-top: 1px solid #f0f0f0; text-align: center;
 }
-
-.result-label {
-  font-size: 0.62rem;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: #dbb3c3;
-  margin-bottom: 1.25rem;
-}
-
-.result-text {
-  font-size: 1.15rem;
-  font-weight: 400;
-  line-height: 1.75;
-  color: #111;
-  margin-bottom: 1.25rem;
-  font-style: normal;
-  letter-spacing: 0.01em;
-}
-
-.result-meta {
-  font-size: 0.68rem;
-  color: #ccc;
-  letter-spacing: 0.04em;
-}
-
-.btn-again {
-  margin-top: 1.25rem;
-  padding: 0.75rem 1.75rem;
-  background: transparent;
-  border: 1px solid #ebebeb;
-  border-radius: 8px;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 0.8rem;
-  color: #999;
-  cursor: pointer;
-  transition: all 0.2s;
-  letter-spacing: 0.03em;
-  min-height: 46px;
+.result-label { font-size: 0.62rem; letter-spacing: 0.16em; text-transform: uppercase; color: #dbb3c3; margin-bottom: 1.25rem; }
+.result-text { font-size: 1.15rem; font-weight: 400; line-height: 1.75; color: #111; margin-bottom: 1.25rem; font-style: normal; letter-spacing: 0.01em; }
+.result-meta { font-size: 0.68rem; color: #ccc; letter-spacing: 0.04em; margin-bottom: 1.5rem; }
+.btn-share {
+  width: 100%; padding: 1rem; background: #edc6d5; color: #fff; border: none; border-radius: 8px;
+  font-family: 'DM Sans', sans-serif; font-size: 0.88rem; font-weight: 500; letter-spacing: 0.04em;
+  cursor: pointer; transition: all 0.2s; min-height: 52px; margin-bottom: 0.65rem;
   -webkit-tap-highlight-color: transparent;
 }
+.btn-share:hover { opacity: 0.85; }
+.btn-share:active { transform: scale(0.98); }
+.btn-again {
+  width: 100%; padding: 0.9rem; background: transparent; border: 1px solid #ebebeb; border-radius: 8px;
+  font-family: 'DM Sans', sans-serif; font-size: 0.8rem; color: #999; cursor: pointer;
+  transition: all 0.2s; letter-spacing: 0.03em; min-height: 46px; -webkit-tap-highlight-color: transparent;
+}
 .btn-again:hover { border-color: #dbb3c3; color: #dbb3c3; }
-
-.error-msg {
-  font-size: 0.8rem;
-  color: #c0392b;
-  margin-top: 0.75rem;
-  display: none;
-  line-height: 1.5;
-}
-
-.loader {
-  display: none;
-  width: 22px;
-  height: 22px;
-  border: 2px solid #f0f0f0;
-  border-top-color: #dbb3c3;
-  border-radius: 50%;
-  animation: spin 0.7s linear infinite;
-  margin: 1.25rem auto;
-}
+.error-msg { font-size: 0.8rem; color: #c0392b; margin-top: 0.75rem; display: none; line-height: 1.5; }
+.loader { display: none; width: 22px; height: 22px; border: 2px solid #f0f0f0; border-top-color: #dbb3c3; border-radius: 50%; animation: spin 0.7s linear infinite; margin: 1.25rem auto; }
 @keyframes spin { to { transform: rotate(360deg); } }
-
-.no-book {
-  font-size: 0.9rem;
-  color: #ccc;
-  text-align: center;
-  padding: 2rem 0;
-  line-height: 1.7;
-}
-
-/* Mobile */
+.no-book { font-size: 0.9rem; color: #ccc; text-align: center; padding: 2rem 0; line-height: 1.7; }
 @media (max-width: 390px) {
   body { padding: 2.5rem 1.25rem; }
   .title { font-size: 1.5rem; }
@@ -257,20 +95,14 @@ input[type=number]:focus { border-color: #dbb3c3; }
 <body>
 <div class="wrap" id="main-wrap">
   <div class="brand">SlashDotDash</div>
-
-  <div id="loading-state">
-    <div class="loader" style="display:block"></div>
-  </div>
+  <div id="loading-state"><div class="loader" style="display:block"></div></div>
 
   <div id="content-state" style="display:none; width:100%">
     <h1 class="title">Передбачення<br>від SlashDotDash</h1>
     <p class="subtitle">У цьому місяці гадаємо на книзі</p>
     <p class="book-name" id="book-title">—</p>
-
     <div class="divider"></div>
-
     <p class="prompt">Задайте питання і починаємо гадати 🪄<br>Вкажіть номер сторінки та рядка</p>
-
     <div class="fields">
       <div class="field-wrap">
         <label>Сторінка</label>
@@ -281,17 +113,15 @@ input[type=number]:focus { border-color: #dbb3c3; }
         <input type="number" id="inp-line" placeholder="5" min="1" inputmode="numeric">
       </div>
     </div>
-
     <button class="btn-submit" onclick="getProphecy()">Дізнатись передбачення</button>
     <button class="btn-random" onclick="getRandom()">✦ Випадкове передбачення</button>
-
     <div class="error-msg" id="error-msg"></div>
     <div class="loader" id="loader"></div>
-
     <div class="result" id="result">
       <div class="result-label">Твоє передбачення</div>
       <div class="result-text" id="result-text"></div>
       <div class="result-meta" id="result-meta"></div>
+      <button class="btn-share" onclick="shareToStories()">✦ Поділитись в Stories</button>
       <button class="btn-again" onclick="reset()">Гадати ще раз</button>
     </div>
   </div>
@@ -301,8 +131,12 @@ input[type=number]:focus { border-color: #dbb3c3; }
   </div>
 </div>
 
+<canvas id="story-canvas" style="display:none"></canvas>
+
 <script>
 let bookTitle = '';
+let currentText = '';
+let currentMeta = '';
 
 async function loadBookInfo() {
   try {
@@ -329,13 +163,10 @@ async function getProphecy() {
   await fetchProphecy({ page, line });
 }
 
-async function getRandom() {
-  await fetchProphecy({});
-}
+async function getRandom() { await fetchProphecy({}); }
 
 async function fetchProphecy(params) {
-  hideError();
-  showLoader(true);
+  hideError(); showLoader(true);
   try {
     const res = await fetch('/api/prophecy', {
       method: 'POST',
@@ -353,15 +184,12 @@ async function fetchProphecy(params) {
 }
 
 function showResult(data) {
-  document.getElementById('result-text').textContent = data.text;
-  const meta = data.mode === 'random'
-    ? bookTitle
-    : bookTitle + ' — стор. ' + data.page + ', рядок ' + data.line;
-  document.getElementById('result-meta').textContent = meta;
+  currentText = data.text;
+  currentMeta = data.mode === 'random' ? bookTitle : bookTitle + ' — стор. ' + data.page + ', рядок ' + data.line;
+  document.getElementById('result-text').textContent = currentText;
+  document.getElementById('result-meta').textContent = currentMeta;
   document.getElementById('result').style.display = 'block';
-  setTimeout(() => {
-    document.getElementById('result').scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }, 100);
+  setTimeout(() => document.getElementById('result').scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
 }
 
 function reset() {
@@ -371,11 +199,107 @@ function reset() {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-function showError(msg) {
-  const el = document.getElementById('error-msg');
-  el.textContent = msg;
-  el.style.display = 'block';
+// ── STORY GENERATION ──────────────────────────────────────────────────────────
+async function shareToStories() {
+  const canvas = document.getElementById('story-canvas');
+  const W = 1080, H = 1920;
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d');
+
+  // Background
+  ctx.fillStyle = '#edc6d5';
+  ctx.fillRect(0, 0, W, H);
+
+  // Load images
+  const [quoteImg, logoImg] = await Promise.all([
+    loadImg('/static/quote.png'),
+    loadImg('/static/logo.png')
+  ]);
+
+  // Quote icon — centered, upper third
+  const qSize = 200;
+  const qX = (W - qSize) / 2;
+  const qY = H * 0.28;
+  ctx.globalAlpha = 1;
+  ctx.drawImage(quoteImg, qX, qY, qSize, qSize);
+
+  // Prophecy text
+  ctx.globalAlpha = 1;
+  ctx.fillStyle = '#fffffa';
+  ctx.textAlign = 'center';
+
+  const maxWidth = W - 160;
+  const lineHeight = 90;
+  const lines = wrapText(ctx, '"' + currentText + '"', maxWidth, 72);
+  const totalTextH = lines.length * lineHeight;
+  let textY = H * 0.48;
+
+  ctx.font = '400 72px DM Sans, sans-serif';
+  lines.forEach((line, i) => {
+    ctx.fillText(line, W / 2, textY + i * lineHeight);
+  });
+
+  // Book name
+  const bookY = textY + totalTextH + 100;
+  ctx.font = '300 42px DM Sans, sans-serif';
+  ctx.fillStyle = 'rgba(255,255,250,0.7)';
+  ctx.fillText('Передбачення з книги', W / 2, bookY);
+  ctx.fillText(bookTitle, W / 2, bookY + 58);
+
+  // Logo
+  const logoW = 320;
+  const logoH = logoW * (logoImg.height / logoImg.width);
+  ctx.globalAlpha = 0.9;
+  ctx.drawImage(logoImg, (W - logoW) / 2, H * 0.88 - logoH / 2, logoW, logoH);
+  ctx.globalAlpha = 1;
+
+  // Export
+  canvas.toBlob(blob => {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'peredbachennya.png';
+    a.click();
+    URL.revokeObjectURL(url);
+
+    // Try Instagram deep link on mobile
+    setTimeout(() => {
+      if (/iPhone|iPad|Android/i.test(navigator.userAgent)) {
+        window.location.href = 'instagram://story-camera';
+      }
+    }, 500);
+  }, 'image/png');
 }
+
+function loadImg(src) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => resolve(img);
+    img.onerror = reject;
+    img.src = src;
+  });
+}
+
+function wrapText(ctx, text, maxWidth, fontSize) {
+  ctx.font = '400 ' + fontSize + 'px DM Sans, sans-serif';
+  const words = text.split(' ');
+  const lines = [];
+  let line = '';
+  words.forEach(word => {
+    const test = line ? line + ' ' + word : word;
+    if (ctx.measureText(test).width > maxWidth && line) {
+      lines.push(line);
+      line = word;
+    } else {
+      line = test;
+    }
+  });
+  if (line) lines.push(line);
+  return lines;
+}
+
+function showError(msg) { const el = document.getElementById('error-msg'); el.textContent = msg; el.style.display = 'block'; }
 function hideError() { document.getElementById('error-msg').style.display = 'none'; }
 function showLoader(v) { document.getElementById('loader').style.display = v ? 'block' : 'none'; }
 
