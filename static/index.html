@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Передбачення — SlashDotDash</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=Cormorant+Garamond:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=EB+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { height: 100%; }
@@ -63,14 +63,13 @@ input[type=number]:focus { border-color: #dbb3c3; }
 }
 .result-label { font-size: 0.62rem; letter-spacing: 0.16em; text-transform: uppercase; color: #dbb3c3; margin-bottom: 1.25rem; }
 .result-text {
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'EB Garamond', serif;
   font-size: 1.5rem;
-  font-weight: 400;
+  font-weight: 600;
   line-height: 1.65;
   color: #111;
   margin-bottom: 1.25rem;
   font-style: normal;
-  letter-spacing: 0.01em;
 }
 .result-meta { font-size: 0.68rem; color: #ccc; letter-spacing: 0.04em; margin-bottom: 1.5rem; }
 .btn-share {
@@ -94,10 +93,7 @@ input[type=number]:focus { border-color: #dbb3c3; }
 @media (max-width: 390px) {
   body { padding: 2.5rem 1.25rem; }
   .title { font-size: 1.5rem; }
-  .prompt { font-size: 0.95rem; }
-  input[type=number] { font-size: 1.1rem; min-height: 52px; }
-  .btn-submit { min-height: 52px; font-size: 0.88rem; }
-  .result-text { font-size: 1.35rem; }
+  .result-text { font-size: 1.3rem; }
 }
 </style>
 </head>
@@ -145,7 +141,6 @@ input[type=number]:focus { border-color: #dbb3c3; }
 <script>
 let bookTitle = '';
 let currentText = '';
-let currentMeta = '';
 
 async function loadBookInfo() {
   try {
@@ -171,7 +166,6 @@ async function getProphecy() {
   if (!page || !line) { showError('Вкажіть сторінку і рядок'); return; }
   await fetchProphecy({ page, line });
 }
-
 async function getRandom() { await fetchProphecy({}); }
 
 async function fetchProphecy(params) {
@@ -194,9 +188,9 @@ async function fetchProphecy(params) {
 
 function showResult(data) {
   currentText = data.text;
-  currentMeta = data.mode === 'random' ? bookTitle : bookTitle + ' — стор. ' + data.page + ', рядок ' + data.line;
+  const meta = data.mode === 'random' ? bookTitle : bookTitle + ' — стор. ' + data.page + ', рядок ' + data.line;
   document.getElementById('result-text').textContent = currentText;
-  document.getElementById('result-meta').textContent = currentMeta;
+  document.getElementById('result-meta').textContent = meta;
   document.getElementById('result').style.display = 'block';
   setTimeout(() => document.getElementById('result').scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
 }
@@ -209,9 +203,16 @@ function reset() {
 }
 
 // ── STORY GENERATION ──────────────────────────────────────────────────────────
+// Canvas: 1080 x 1920
+// quote.png original: 1080 x 1350 → ratio h/w = 1.25
+// logo.png original:  800  x 250  → ratio h/w = 0.3125
+
+const QUOTE_RATIO = 1350 / 1080;
+const LOGO_RATIO  = 250  / 800;
+
 async function shareToStories() {
-  const canvas = document.getElementById('story-canvas');
   const W = 1080, H = 1920;
+  const canvas = document.getElementById('story-canvas');
   canvas.width = W; canvas.height = H;
   const ctx = canvas.getContext('2d');
 
@@ -219,52 +220,55 @@ async function shareToStories() {
   ctx.fillStyle = '#edc6d5';
   ctx.fillRect(0, 0, W, H);
 
-  // Load images
   const [quoteImg, logoImg] = await Promise.all([
     loadImg('/static/quote.png'),
     loadImg('/static/logo.png')
   ]);
 
-  // Center zone: vertically center all content in middle 60% of canvas
-  const centerY = H * 0.45; // anchor point for center of content
+  // ── Quote image — top section, correct proportions ──
+  // Draw at width=220, height=220*QUOTE_RATIO=275
+  const qW = 220;
+  const qH = Math.round(qW * QUOTE_RATIO);
+  const qX = (W - qW) / 2;
+  const qY = 480; // top padding
+  ctx.drawImage(quoteImg, qX, qY, qW, qH);
 
-  // Quote icon — square, не стиснуто
-  const qSize = 160;
-  ctx.drawImage(quoteImg, (W - qSize) / 2, centerY - 380, qSize, qSize);
-
-  // Prophecy text — Cormorant Garamond
+  // ── Prophecy text — EB Garamond SemiBold ──
+  const fontSize = 74;
+  const lineH = 104;
+  const maxW = W - 200; // 100px padding each side
   ctx.fillStyle = '#fffffa';
   ctx.textAlign = 'center';
-  const fontSize = 76;
-  const lineHeight = 100;
-  const maxWidth = W - 180;
-  const lines = wrapText(ctx, '\u201C' + currentText + '\u201D', maxWidth, fontSize, 'Cormorant Garamond');
-  const totalTextH = lines.length * lineHeight;
+  ctx.font = '600 ' + fontSize + 'px "EB Garamond", serif';
+  const lines = wrapText(ctx, currentText, maxW);
+  const totalTextH = lines.length * lineH;
 
-  // Draw text centered around centerY
-  const textStartY = centerY - totalTextH / 2 + 30;
-  ctx.font = '400 ' + fontSize + 'px "Cormorant Garamond", serif';
+  // Position text: start below quote with 80px gap
+  const textStartY = qY + qH + 100;
   lines.forEach((line, i) => {
-    ctx.fillText(line, W / 2, textStartY + i * lineHeight);
+    ctx.fillText(line, W / 2, textStartY + i * lineH);
   });
 
-  // Book label — smaller, semi-transparent, below text
-  const bookY = textStartY + totalTextH + 80;
-  ctx.font = '500 38px "DM Sans", sans-serif';
+  // ── "Передбачення з книги" label ──
+  const labelY = textStartY + totalTextH + 100;
+  ctx.font = '500 36px "DM Sans", sans-serif';
   ctx.fillStyle = 'rgba(255,255,250,0.65)';
-  ctx.fillText('Передбачення з книги', W / 2, bookY);
-  ctx.font = '600 36px "DM Sans", sans-serif';
-  ctx.fillStyle = 'rgba(255,255,250,0.85)';
-  ctx.fillText(bookTitle, W / 2, bookY + 52);
+  ctx.fillText('Передбачення з книги', W / 2, labelY);
 
-  // Logo at bottom
-  const logoW = 300;
-  const logoH = Math.round(logoW * (logoImg.height / logoImg.width));
+  ctx.font = '600 38px "DM Sans", sans-serif';
+  ctx.fillStyle = 'rgba(255,255,250,0.9)';
+  ctx.fillText(bookTitle, W / 2, labelY + 58);
+
+  // ── Logo — bottom, correct proportions ──
+  const lW = 280;
+  const lH = Math.round(lW * LOGO_RATIO); // 280 * 0.3125 = 87px
+  const lX = (W - lW) / 2;
+  const lY = H - 200 - lH;
   ctx.globalAlpha = 0.9;
-  ctx.drawImage(logoImg, (W - logoW) / 2, H - 220 - logoH / 2, logoW, logoH);
+  ctx.drawImage(logoImg, lX, lY, lW, lH);
   ctx.globalAlpha = 1;
 
-  // Download
+  // Download + open Instagram
   canvas.toBlob(blob => {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -276,7 +280,7 @@ async function shareToStories() {
       if (/iPhone|iPad|Android/i.test(navigator.userAgent)) {
         window.location.href = 'instagram://story-camera';
       }
-    }, 600);
+    }, 700);
   }, 'image/png');
 }
 
@@ -290,19 +294,15 @@ function loadImg(src) {
   });
 }
 
-function wrapText(ctx, text, maxWidth, fontSize, family) {
-  ctx.font = '400 ' + fontSize + 'px "' + family + '", serif';
+function wrapText(ctx, text, maxWidth) {
   const words = text.split(' ');
   const lines = [];
   let line = '';
   words.forEach(word => {
     const test = line ? line + ' ' + word : word;
     if (ctx.measureText(test).width > maxWidth && line) {
-      lines.push(line);
-      line = word;
-    } else {
-      line = test;
-    }
+      lines.push(line); line = word;
+    } else { line = test; }
   });
   if (line) lines.push(line);
   return lines;
