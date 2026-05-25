@@ -249,21 +249,18 @@ async function shareToStories() {
     ctx.fillText(line, W / 2, textStartY + i * lineH);
   });
 
-  // ── "Передбачення з книги" label ──
-  const labelY = textStartY + totalTextH + 100;
-  ctx.font = '500 36px "DM Sans", sans-serif';
-  ctx.fillStyle = 'rgba(255,255,250,0.65)';
-  ctx.fillText('Передбачення з книги', W / 2, labelY);
-
-  ctx.font = '600 38px "DM Sans", sans-serif';
-  ctx.fillStyle = 'rgba(255,255,250,0.9)';
-  ctx.fillText(bookTitle, W / 2, labelY + 58);
-
   // ── Logo — bottom, correct proportions ──
   const lW = 280;
   const lH = Math.round(lW * LOGO_RATIO); // 280 * 0.3125 = 87px
   const lX = (W - lW) / 2;
   const lY = H - 200 - lH;
+
+  // ── "Передбачення з книги" label — just above logo, same weight ──
+  ctx.font = '400 30px "DM Sans", sans-serif';
+  ctx.fillStyle = 'rgba(255,255,250,0.75)';
+  const labelY = lY - 120;
+  ctx.fillText('Передбачення з книги', W / 2, labelY);
+  ctx.fillText(bookTitle, W / 2, labelY + 44);
   ctx.globalAlpha = 0.9;
   ctx.drawImage(logoImg, lX, lY, lW, lH);
   ctx.globalAlpha = 1;
