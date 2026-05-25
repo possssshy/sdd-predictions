@@ -210,7 +210,7 @@ function reset() {
 const QUOTE_RATIO = 1350 / 1080;
 const LOGO_RATIO  = 250  / 800;
 
-async function shareToStories() {
+function shareToStories() {
   const W = 1080, H = 1920;
   const canvas = document.getElementById('story-canvas');
   canvas.width = W; canvas.height = H;
@@ -220,10 +220,17 @@ async function shareToStories() {
   ctx.fillStyle = '#edc6d5';
   ctx.fillRect(0, 0, W, H);
 
-  const [quoteImg, logoImg] = await Promise.all([
+  Promise.all([
     loadImg('/static/quote.png'),
     loadImg('/static/logo.png')
-  ]);
+  ]).then(function(imgs) {
+    var quoteImg = imgs[0];
+    var logoImg = imgs[1];
+    drawStory(ctx, W, H, quoteImg, logoImg, canvas);
+  });
+}
+
+function drawStory(ctx, W, H, quoteImg, logoImg, canvas) {
 
   // ── Quote image — top section, correct proportions ──
   // Draw at width=220, height=220*QUOTE_RATIO=275
@@ -265,19 +272,25 @@ async function shareToStories() {
   ctx.drawImage(logoImg, lX, lY, lW, lH);
   ctx.globalAlpha = 1;
 
-  // Download + open Instagram
-  canvas.toBlob(blob => {
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'peredbachennya.png';
-    a.click();
-    URL.revokeObjectURL(url);
-    setTimeout(() => {
-      if (/iPhone|iPad|Android/i.test(navigator.userAgent)) {
-        window.location.href = 'instagram://story-camera';
-      }
-    }, 700);
+  // Share via Web Share API (iOS 15+) or fallback to download
+  canvas.toBlob(function(blob) {
+    const file = new File([blob], 'peredbachennya.png', { type: 'image/png' });
+
+    // Try Web Share API first (shows native share sheet incl. Instagram)
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      navigator.share({
+        files: [file],
+        title: 'Моє передбачення від SlashDotDash'
+      }).then(function() {
+        // shared successfully
+      }).catch(function(e) {
+        if (e.name !== 'AbortError') {
+          downloadFallback(blob);
+        }
+      });
+    } else {
+      downloadFallback(blob);
+    }
   }, 'image/png');
 }
 
@@ -303,6 +316,26 @@ function wrapText(ctx, text, maxWidth) {
   });
   if (line) lines.push(line);
   return lines;
+}
+
+function downloadFallback(blob) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'peredbachennya.png';
+  a.click();
+  URL.revokeObjectURL(url);
+  showHint();
+}
+
+function showHint() {
+  const existing = document.getElementById('share-hint');
+  if (existing) return;
+  const hint = document.createElement('div');
+  hint.id = 'share-hint';
+  hint.style.cssText = 'position:fixed;bottom:0;left:0;right:0;background:#111;color:#fff;padding:1.25rem 1.5rem;font-family:DM Sans,sans-serif;font-size:0.85rem;line-height:1.6;text-align:center;z-index:999;border-radius:16px 16px 0 0;';
+  hint.innerHTML = '📸 Фото збережено<br><span style="color:#edc6d5;font-size:0.78rem;">Відкрий Instagram → Stories → обери фото з галереї</span><br><button onclick="document.getElementById('share-hint').remove()" style="margin-top:0.75rem;background:transparent;border:1px solid rgba(255,255,255,0.3);color:#fff;padding:0.4rem 1.2rem;border-radius:20px;font-family:DM Sans,sans-serif;font-size:0.75rem;cursor:pointer;">Зрозуміло</button>';
+  document.body.appendChild(hint);
 }
 
 function showError(msg) { const el = document.getElementById('error-msg'); el.textContent = msg; el.style.display = 'block'; }
