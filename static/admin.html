@@ -5,11 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Адмін — Book Oracle</title>
 <style>
-@font-face { font-family: 'MuseoSans'; src: url('/static/Fontspring-DEMO-MuseoSans_300.otf'); font-weight: 300; }
-@font-face { font-family: 'MuseoSans'; src: url('/static/Fontspring-DEMO-MuseoSans_500.otf'); font-weight: 500; }
-@font-face { font-family: 'MuseoSans'; src: url('/static/Fontspring-DEMO-MuseoSans_700.otf'); font-weight: 700; }
+
+
+
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'MuseoSans', sans-serif; font-weight: 300; background: #f9f9f9; color: #111; min-height: 100vh; padding: 2.5rem; }
+body { font-family: 'DM Sans', sans-serif; font-weight: 300; background: #f9f9f9; color: #111; min-height: 100vh; padding: 2.5rem; }
 .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2.5rem; }
 .header h1 { font-size: 1.1rem; font-weight: 500; letter-spacing: 0.02em; }
 .header a { font-size: 0.75rem; color: #aaa; text-decoration: none; }
@@ -17,12 +17,12 @@ body { font-family: 'MuseoSans', sans-serif; font-weight: 300; background: #f9f9
 .card { background: #fff; border: 1px solid #eee; border-radius: 6px; padding: 1.75rem; margin-bottom: 1.25rem; max-width: 600px; }
 .card-title { font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; color: #aaa; margin-bottom: 1.25rem; }
 label { font-size: 0.75rem; color: #888; display: block; margin-bottom: 0.35rem; }
-input[type=text], select { width: 100%; padding: 0.7rem 0.9rem; border: 1px solid #e5e5e5; border-radius: 4px; font-family: 'MuseoSans', sans-serif; font-size: 0.85rem; font-weight: 300; color: #111; outline: none; margin-bottom: 1rem; transition: border-color 0.2s; }
+input[type=text], select { width: 100%; padding: 0.7rem 0.9rem; border: 1px solid #e5e5e5; border-radius: 4px; font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 300; color: #111; outline: none; margin-bottom: 1rem; transition: border-color 0.2s; }
 input:focus, select:focus { border-color: #dbb3c3; }
 .drop-zone { border: 1.5px dashed #e5e5e5; border-radius: 6px; padding: 2rem; text-align: center; cursor: pointer; font-size: 0.8rem; color: #aaa; transition: all 0.15s; margin-bottom: 1rem; }
 .drop-zone:hover, .drop-zone.drag { border-color: #dbb3c3; color: #dbb3c3; }
 input[type=file] { display: none; }
-.btn { display: inline-block; padding: 0.7rem 1.5rem; background: #111; color: #fff; border: none; border-radius: 4px; font-family: 'MuseoSans', sans-serif; font-size: 0.78rem; font-weight: 500; letter-spacing: 0.06em; cursor: pointer; transition: background 0.15s; }
+.btn { display: inline-block; padding: 0.7rem 1.5rem; background: #111; color: #fff; border: none; border-radius: 4px; font-family: 'DM Sans', sans-serif; font-size: 0.78rem; font-weight: 500; letter-spacing: 0.06em; cursor: pointer; transition: background 0.15s; }
 .btn:hover { background: #333; }
 .btn:disabled { background: #ccc; cursor: not-allowed; }
 .progress { height: 3px; background: #f0f0f0; border-radius: 2px; margin-top: 0.75rem; overflow: hidden; display: none; }
@@ -37,6 +37,8 @@ input[type=file] { display: none; }
 .status-text { font-size: 0.8rem; color: #888; }
 .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
 </style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
 <div class="header">
