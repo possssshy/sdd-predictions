@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Передбачення — SlashDotDash</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=Cormorant+Garamond:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { height: 100%; }
@@ -49,7 +49,6 @@ input[type=number]:focus { border-color: #dbb3c3; }
 }
 .btn-submit:hover { background: #222; }
 .btn-submit:active { transform: scale(0.98); }
-.btn-submit:disabled { background: #ccc; cursor: not-allowed; }
 .btn-random {
   width: 100%; padding: 1rem; background: transparent; color: #bbb; border: 1px solid #ebebeb;
   border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 300;
@@ -63,7 +62,16 @@ input[type=number]:focus { border-color: #dbb3c3; }
   border-top: 1px solid #f0f0f0; text-align: center;
 }
 .result-label { font-size: 0.62rem; letter-spacing: 0.16em; text-transform: uppercase; color: #dbb3c3; margin-bottom: 1.25rem; }
-.result-text { font-size: 1.15rem; font-weight: 400; line-height: 1.75; color: #111; margin-bottom: 1.25rem; font-style: normal; letter-spacing: 0.01em; }
+.result-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.5rem;
+  font-weight: 400;
+  line-height: 1.65;
+  color: #111;
+  margin-bottom: 1.25rem;
+  font-style: normal;
+  letter-spacing: 0.01em;
+}
 .result-meta { font-size: 0.68rem; color: #ccc; letter-spacing: 0.04em; margin-bottom: 1.5rem; }
 .btn-share {
   width: 100%; padding: 1rem; background: #edc6d5; color: #fff; border: none; border-radius: 8px;
@@ -89,6 +97,7 @@ input[type=number]:focus { border-color: #dbb3c3; }
   .prompt { font-size: 0.95rem; }
   input[type=number] { font-size: 1.1rem; min-height: 52px; }
   .btn-submit { min-height: 52px; font-size: 0.88rem; }
+  .result-text { font-size: 1.35rem; }
 }
 </style>
 </head>
@@ -216,44 +225,46 @@ async function shareToStories() {
     loadImg('/static/logo.png')
   ]);
 
-  // Quote icon — centered, upper third
-  const qSize = 200;
-  const qX = (W - qSize) / 2;
-  const qY = H * 0.28;
-  ctx.globalAlpha = 1;
-  ctx.drawImage(quoteImg, qX, qY, qSize, qSize);
+  // Center zone: vertically center all content in middle 60% of canvas
+  const centerY = H * 0.45; // anchor point for center of content
 
-  // Prophecy text
-  ctx.globalAlpha = 1;
+  // Quote icon — square, не стиснуто
+  const qSize = 160;
+  ctx.drawImage(quoteImg, (W - qSize) / 2, centerY - 380, qSize, qSize);
+
+  // Prophecy text — Cormorant Garamond
   ctx.fillStyle = '#fffffa';
   ctx.textAlign = 'center';
-
-  const maxWidth = W - 160;
-  const lineHeight = 90;
-  const lines = wrapText(ctx, '"' + currentText + '"', maxWidth, 72);
+  const fontSize = 76;
+  const lineHeight = 100;
+  const maxWidth = W - 180;
+  const lines = wrapText(ctx, '\u201C' + currentText + '\u201D', maxWidth, fontSize, 'Cormorant Garamond');
   const totalTextH = lines.length * lineHeight;
-  let textY = H * 0.48;
 
-  ctx.font = '400 72px DM Sans, sans-serif';
+  // Draw text centered around centerY
+  const textStartY = centerY - totalTextH / 2 + 30;
+  ctx.font = '400 ' + fontSize + 'px "Cormorant Garamond", serif';
   lines.forEach((line, i) => {
-    ctx.fillText(line, W / 2, textY + i * lineHeight);
+    ctx.fillText(line, W / 2, textStartY + i * lineHeight);
   });
 
-  // Book name
-  const bookY = textY + totalTextH + 100;
-  ctx.font = '300 42px DM Sans, sans-serif';
-  ctx.fillStyle = 'rgba(255,255,250,0.7)';
+  // Book label — smaller, semi-transparent, below text
+  const bookY = textStartY + totalTextH + 80;
+  ctx.font = '500 38px "DM Sans", sans-serif';
+  ctx.fillStyle = 'rgba(255,255,250,0.65)';
   ctx.fillText('Передбачення з книги', W / 2, bookY);
-  ctx.fillText(bookTitle, W / 2, bookY + 58);
+  ctx.font = '600 36px "DM Sans", sans-serif';
+  ctx.fillStyle = 'rgba(255,255,250,0.85)';
+  ctx.fillText(bookTitle, W / 2, bookY + 52);
 
-  // Logo
-  const logoW = 320;
-  const logoH = logoW * (logoImg.height / logoImg.width);
+  // Logo at bottom
+  const logoW = 300;
+  const logoH = Math.round(logoW * (logoImg.height / logoImg.width));
   ctx.globalAlpha = 0.9;
-  ctx.drawImage(logoImg, (W - logoW) / 2, H * 0.88 - logoH / 2, logoW, logoH);
+  ctx.drawImage(logoImg, (W - logoW) / 2, H - 220 - logoH / 2, logoW, logoH);
   ctx.globalAlpha = 1;
 
-  // Export
+  // Download
   canvas.toBlob(blob => {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -261,13 +272,11 @@ async function shareToStories() {
     a.download = 'peredbachennya.png';
     a.click();
     URL.revokeObjectURL(url);
-
-    // Try Instagram deep link on mobile
     setTimeout(() => {
       if (/iPhone|iPad|Android/i.test(navigator.userAgent)) {
         window.location.href = 'instagram://story-camera';
       }
-    }, 500);
+    }, 600);
   }, 'image/png');
 }
 
@@ -277,12 +286,12 @@ function loadImg(src) {
     img.crossOrigin = 'anonymous';
     img.onload = () => resolve(img);
     img.onerror = reject;
-    img.src = src;
+    img.src = src + '?v=' + Date.now();
   });
 }
 
-function wrapText(ctx, text, maxWidth, fontSize) {
-  ctx.font = '400 ' + fontSize + 'px DM Sans, sans-serif';
+function wrapText(ctx, text, maxWidth, fontSize, family) {
+  ctx.font = '400 ' + fontSize + 'px "' + family + '", serif';
   const words = text.split(' ');
   const lines = [];
   let line = '';
