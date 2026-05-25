@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Адмін — Book Oracle</title>
+<style>
+@font-face { font-family: 'MuseoSans'; src: url('/static/MuseoSans_300.otf'); font-weight: 300; }
+@font-face { font-family: 'MuseoSans'; src: url('/static/MuseoSans_500.otf'); font-weight: 500; }
+@font-face { font-family: 'MuseoSans'; src: url('/static/MuseoSans_700.otf'); font-weight: 700; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'MuseoSans', sans-serif; font-weight: 300; background: #f9f9f9; color: #111; min-height: 100vh; padding: 2.5rem; }
+.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2.5rem; }
+.header h1 { font-size: 1.1rem; font-weight: 500; letter-spacing: 0.02em; }
+.header a { font-size: 0.75rem; color: #aaa; text-decoration: none; }
+.header a:hover { color: #dbb3c3; }
+.card { background: #fff; border: 1px solid #eee; border-radius: 6px; padding: 1.75rem; margin-bottom: 1.25rem; max-width: 600px; }
+.card-title { font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; color: #aaa; margin-bottom: 1.25rem; }
+label { font-size: 0.75rem; color: #888; display: block; margin-bottom: 0.35rem; }
+input[type=text], select { width: 100%; padding: 0.7rem 0.9rem; border: 1px solid #e5e5e5; border-radius: 4px; font-family: 'MuseoSans', sans-serif; font-size: 0.85rem; font-weight: 300; color: #111; outline: none; margin-bottom: 1rem; transition: border-color 0.2s; }
+input:focus, select:focus { border-color: #dbb3c3; }
+.drop-zone { border: 1.5px dashed #e5e5e5; border-radius: 6px; padding: 2rem; text-align: center; cursor: pointer; font-size: 0.8rem; color: #aaa; transition: all 0.15s; margin-bottom: 1rem; }
+.drop-zone:hover, .drop-zone.drag { border-color: #dbb3c3; color: #dbb3c3; }
+input[type=file] { display: none; }
+.btn { display: inline-block; padding: 0.7rem 1.5rem; background: #111; color: #fff; border: none; border-radius: 4px; font-family: 'MuseoSans', sans-serif; font-size: 0.78rem; font-weight: 500; letter-spacing: 0.06em; cursor: pointer; transition: background 0.15s; }
+.btn:hover { background: #333; }
+.btn:disabled { background: #ccc; cursor: not-allowed; }
+.progress { height: 3px; background: #f0f0f0; border-radius: 2px; margin-top: 0.75rem; overflow: hidden; display: none; }
+.progress.show { display: block; }
+.progress-fill { height: 100%; background: #dbb3c3; border-radius: 2px; transition: width 0.3s; width: 0%; }
+.msg { padding: 0.6rem 0.9rem; border-radius: 4px; font-size: 0.78rem; margin-top: 0.75rem; display: none; }
+.msg.show { display: block; }
+.msg.ok { background: #e8f4e8; color: #2d6a2d; }
+.msg.err { background: #f4e8e8; color: #6a2d2d; }
+.status-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #ccc; margin-right: 6px; }
+.status-dot.active { background: #dbb3c3; }
+.status-text { font-size: 0.8rem; color: #888; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>Book Oracle — Адмін</h1>
+  <a href="/admin/logout">Вийти</a>
+</div>
+
+<div class="card">
+  <div class="card-title">Поточна книга</div>
+  <div>
+    <span class="status-dot" id="status-dot"></span>
+    <span class="status-text" id="status-text">Завантаження...</span>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title">Завантажити нову книгу (PDF)</div>
+  <div class="row2">
+    <div>
+      <label>Назва книги (для клієнтів)</label>
+      <input type="text" id="book-title" placeholder="Кайдашева сім'я">
+    </div>
+    <div>
+      <label>Рядків у передбаченні</label>
+      <select id="lines-take">
+        <option value="1">1 рядок</option>
+        <option value="2" selected>2 рядки</option>
+        <option value="3">3 рядки</option>
+        <option value="4">4 рядки</option>
+        <option value="5">5 рядків</option>
+      </select>
+    </div>
+  </div>
+  <div class="drop-zone" id="drop-zone" onclick="document.getElementById('file-pdf').click()" ondrop="dropPdf(event)" ondragover="dov(event)" ondragleave="dol()">
+    Натисніть або перетягніть PDF файл
+  </div>
+  <input type="file" id="file-pdf" accept=".pdf" onchange="uploadPdf(event.target.files[0])">
+  <div class="progress" id="progress"><div class="progress-fill" id="progress-fill"></div></div>
+  <div class="msg" id="msg"></div>
+</div>
+
+<script>
+async function loadStatus() {
+  const res = await fetch('/api/book-info');
+  const data = await res.json();
+  const dot = document.getElementById('status-dot');
+  const txt = document.getElementById('status-text');
+  if (data.loaded) {
+    dot.classList.add('active');
+    txt.textContent = '"' + data.title + '" — ' + data.total_pages + ' сторінок';
+  } else {
+    txt.textContent = 'Книга не завантажена';
+  }
+}
+
+function dov(e) { e.preventDefault(); document.getElementById('drop-zone').classList.add('drag'); }
+function dol() { document.getElementById('drop-zone').classList.remove('drag'); }
+function dropPdf(e) { e.preventDefault(); dol(); uploadPdf(e.dataTransfer.files[0]); }
+
+async function uploadPdf(f) {
+  if (!f) return;
+  const title = document.getElementById('book-title').value || f.name.replace('.pdf','');
+  const linesTake = document.getElementById('lines-take').value;
+  const prog = document.getElementById('progress');
+  const fill = document.getElementById('progress-fill');
+  prog.classList.add('show'); fill.style.width = '30%';
+  showMsg('⏳ Завантажуємо PDF...', 'ok');
+
+  const fd = new FormData();
+  fd.append('pdf', f);
+  fd.append('title', title);
+  fd.append('lines_take', linesTake);
+
+  fill.style.width = '60%';
+  try {
+    const res = await fetch('/api/upload-pdf', { method: 'POST', body: fd });
+    const data = await res.json();
+    fill.style.width = '100%';
+    setTimeout(() => prog.classList.remove('show'), 800);
+    if (data.error) { showMsg('Помилка: ' + data.error, 'err'); return; }
+    showMsg('✓ Завантажено: "' + data.title + '" — ' + data.total_pages + ' сторінок, ' + data.total_lines.toLocaleString() + ' рядків', 'ok');
+    document.getElementById('drop-zone').textContent = '✓ ' + f.name;
+    loadStatus();
+  } catch(e) {
+    prog.classList.remove('show');
+    showMsg('Помилка: ' + e.message, 'err');
+  }
+}
+
+function showMsg(txt, type) {
+  const el = document.getElementById('msg');
+  el.textContent = txt;
+  el.className = 'msg show ' + type;
+}
+
+loadStatus();
+</script>
+</body>
+</html>
