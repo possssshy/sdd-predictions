@@ -26,7 +26,11 @@ def static_files(filename):
 # ── Public page ───────────────────────────────────────────────────────────────
 @app.route('/')
 def index():
-    return send_from_directory('static', 'index.html')
+    response = send_from_directory('static', 'index.html')
+    response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
+    return response
 
 # ── Admin pages ───────────────────────────────────────────────────────────────
 @app.route('/admin')
